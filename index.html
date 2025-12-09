@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Pro - Smart Interview Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="darkmode.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#00d4ff',
+                        secondary: '#7c3aed',
+                        accent: '#10b981',
+                        tech: '#1e293b',
+                        cyber: '#0ea5e9'
+                    },
+                    fontFamily: {
+                        'mono': ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace']
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'float': 'float 6s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px #00d4ff' },
+                            '100%': { boxShadow: '0 0 20px #00d4ff, 0 0 30px #00d4ff' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+        .tech-grid { background-image: radial-gradient(circle at 1px 1px, rgba(0,212,255,0.15) 1px, transparent 0); background-size: 20px 20px; }
+        .matrix-text { font-family: 'JetBrains Mono', monospace; }
+        .hero-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #7c3aed 100%); }
+    </style>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDUcG95XK9gg3PBKqYZVBYk5rarf-vExck",
+            authDomain: "chayan2-platform.firebaseapp.com",
+            projectId: "chayan2-platform",
+            storageBucket: "chayan2-platform.firebasestorage.app",
+            messagingSenderId: "694117760821",
+            appId: "1:694117760821:web:68d2b2dee6fd158984567c",
+            measurementId: "G-PB84HY01ED"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        window.firebaseAuth = { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile };
+        window.firebaseDB = { db, collection, addDoc, getDocs, updateDoc, deleteDoc, doc };
+    </script>
+</head>
+<body class="bg-slate-50 dark:bg-gray-900 tech-grid matrix-text transition-colors duration-300">
+    <!-- Navigation -->
+    <nav class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm shadow-lg border-b border-primary/20 dark:border-gray-700 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">AI Interview Pro</h1>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#features" class="text-gray-600 dark:text-gray-300 hover:text-primary px-3 py-2 text-sm font-medium transition-colors">Features</a>
+                        <a href="#pricing" class="text-gray-600 dark:text-gray-300 hover:text-primary px-3 py-2 text-sm font-medium transition-colors">Pricing</a>
+                        <button onclick="toggleDarkMode()" class="text-gray-600 dark:text-gray-300 hover:text-primary px-3 py-2 text-sm font-medium transition-colors" title="Toggle dark mode">
+                            <span id="darkModeIcon">🌙</span>
+                        </button>
+                        <button onclick="openLoginPopup()" class="text-gray-600 dark:text-gray-300 hover:text-primary px-3 py-2 text-sm font-medium transition-colors">Login</button>
+                        <button onclick="openSignupModal()" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Get Started</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg text-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative z-10">
+            <div class="text-center">
+                <div class="flex justify-center mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-2xl flex items-center justify-center animate-float">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                    </div>
+                </div>
+                <h1 class="text-5xl md:text-6xl font-bold mb-6">
+                    <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Smart AI Interviews</span><br>
+                    <span class="text-white/90 font-mono text-4xl md:text-5xl">{ Made Simple }</span>
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 text-white/80 max-w-3xl mx-auto font-mono">
+                    // Revolutionize your hiring process with AI-powered interviews<br>
+                    <span class="text-primary">const</span> <span class="text-accent">assessment</span> = <span class="text-white">fair && efficient;</span>
+                </p>
+                <div class="flex justify-center space-x-4">
+                    <button onclick="openSignupModal()" class="bg-gradient-to-r from-primary to-accent text-white px-8 py-4 rounded-xl text-lg font-semibold hover:shadow-2xl hover:shadow-primary/25 transition-all duration-300 animate-glow">
+                        <span class="flex items-center space-x-2">
+                            <span>Start Free Trial</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold bg-gradient-to-r from-tech to-primary bg-clip-text text-transparent mb-4">Powerful Features</h2>
+                <p class="text-xl text-slate-600 dark:text-gray-300 font-mono">// Everything you need for modern recruitment</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-cyber/10 hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 border border-primary/20 hover:border-primary/40">
+                    <div class="w-16 h-16 bg-gradient-to-r from-primary to-cyber rounded-2xl flex items-center justify-center mx-auto mb-4 animate-glow">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-primary">AI-Powered Assessment</h3>
+                    <p class="text-slate-600 font-mono text-sm">// Advanced algorithms evaluate technical skills automatically</p>
+                </div>
+                <div class="text-center p-6 rounded-xl bg-gray-50 hover:shadow-lg transition">
+                    <div class="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Real-time Analysis</h3>
+                    <p class="text-gray-600">Get instant feedback and detailed reports on candidate performance</p>
+                </div>
+                <div class="text-center p-6 rounded-xl bg-gray-50 hover:shadow-lg transition">
+                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Bias-Free Hiring</h3>
+                    <p class="text-gray-600">Ensure fair and objective candidate evaluation with AI-driven insights</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 text-center">
+                <div>
+                    <div class="text-4xl font-bold text-primary mb-2">50K+</div>
+                    <div class="text-gray-300">Interviews Conducted</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-primary mb-2">95%</div>
+                    <div class="text-gray-300">Accuracy Rate</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-primary mb-2">500+</div>
+                    <div class="text-gray-300">Companies Trust Us</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-primary mb-2">60%</div>
+                    <div class="text-gray-300">Time Saved</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Simple Pricing</h2>
+                <p class="text-xl text-gray-600">Choose the plan that fits your needs</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-sm border">
+                    <h3 class="text-2xl font-bold mb-4">Starter</h3>
+                    <div class="text-4xl font-bold text-primary mb-6">$29<span class="text-lg text-gray-500">/month</span></div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> 50 interviews/month</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Basic AI analysis</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Email support</li>
+                    </ul>
+                    <button onclick="if(restrictUnverifiedActions('subscribe to plans')) openSignupModal()" class="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-200 transition">
+                        Get Started
+                    </button>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg border-2 border-primary relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-primary text-white px-4 py-1 rounded-full text-sm font-semibold">
+                        Most Popular
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Professional</h3>
+                    <div class="text-4xl font-bold text-primary mb-6">$99<span class="text-lg text-gray-500">/month</span></div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> 200 interviews/month</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Advanced AI analysis</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Priority support</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Custom branding</li>
+                    </ul>
+                    <button onclick="if(restrictUnverifiedActions('subscribe to plans')) openSignupModal()" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
+                        Get Started
+                    </button>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-sm border">
+                    <h3 class="text-2xl font-bold mb-4">Enterprise</h3>
+                    <div class="text-4xl font-bold text-primary mb-6">Custom</div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Unlimited interviews</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Full AI suite</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Dedicated support</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> API access</li>
+                    </ul>
+                    <button class="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-200 transition">
+                        Contact Sales
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-primary text-white">
+        <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold mb-6">Ready to Transform Your Hiring?</h2>
+            <p class="text-xl mb-8 text-indigo-100">Join thousands of companies using AI Interview Pro to find the best talent</p>
+            <button class="bg-white text-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition">
+                Start Your Free Trial
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold text-primary mb-4">AI Interview Pro</h3>
+                    <p class="text-gray-400">The future of smart hiring is here.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Product</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Features</a></li>
+                        <li><a href="#" class="hover:text-white">Pricing</a></li>
+                        <li><a href="#" class="hover:text-white">API</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">About</a></li>
+                        <li><a href="#" class="hover:text-white">Careers</a></li>
+                        <li><a href="#" class="hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white">Privacy</a></li>
+                        <li><a href="#" class="hover:text-white">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 AI Interview Pro. All rights reserved. <span onclick="openAdminLogin()" class="cursor-pointer hover:text-white transition-colors">Admin</span></p>
+            </div>
+        </div>
+    </footer>
+    <!-- Login Popup -->
+    <div id="loginPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Login</h2>
+                <button onclick="closeLoginPopup()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" id="loginEmail" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" placeholder="Enter your email">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <input type="password" id="loginPassword" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" placeholder="Enter your password">
+                </div>
+                <button type="submit" class="w-full bg-primary text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition">
+                    Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openLoginPopup() {
+            document.getElementById('loginPopup').classList.remove('hidden');
+        }
+        
+        function closeLoginPopup() {
+            document.getElementById('loginPopup').classList.add('hidden');
+        }
+        
+        // Close popup when clicking outside
+        document.getElementById('loginPopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLoginPopup();
+            }
+        });
+    </script>
+    <!-- Login/Signup Modal -->
+    <div id="authModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-gray-200">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 id="authTitle" class="text-2xl font-bold text-gray-900">Sign In</h2>
+                    <button id="closeAuthModal" class="p-2 text-gray-400 hover:text-gray-600 rounded-xl transition-all duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <form id="authForm" class="space-y-4">
+                    <div id="nameField" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                        <input type="text" id="displayName" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200" placeholder="Enter your full name">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" id="email" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200" placeholder="Enter your email">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" id="password" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200" placeholder="Enter your password">
+                    </div>
+                    
+                    <div id="errorMessage" class="hidden text-red-600 text-sm bg-red-50 p-3 rounded-lg"></div>
+                    
+                    <button type="submit" id="authSubmitBtn" class="w-full bg-primary hover:bg-primary/90 text-white py-3 rounded-xl font-semibold transition-all duration-200">
+                        Sign In
+                    </button>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600">
+                        <span id="authSwitchText">Don't have an account?</span>
+                        <button id="authSwitchBtn" class="text-primary hover:text-primary/80 font-medium ml-1">
+                            Sign Up
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { authService } from './auth.js';
+        
+        // Modal elements
+        const authModal = document.getElementById('authModal');
+        const authTitle = document.getElementById('authTitle');
+        const authForm = document.getElementById('authForm');
+        const nameField = document.getElementById('nameField');
+        const authSubmitBtn = document.getElementById('authSubmitBtn');
+        const authSwitchText = document.getElementById('authSwitchText');
+        const authSwitchBtn = document.getElementById('authSwitchBtn');
+        const closeAuthModal = document.getElementById('closeAuthModal');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        let isSignUp = false;
+        
+        // Open login popup function (called from HTML)
+        window.openLoginPopup = function() {
+            authModal.classList.remove('hidden');
+            authModal.classList.add('flex');
+        }
+        
+        // Close modal
+        function closeModal() {
+            authModal.classList.add('hidden');
+            authModal.classList.remove('flex');
+            authForm.reset();
+            hideError();
+        }
+        
+        // Switch between login and signup
+        function switchAuthMode() {
+            isSignUp = !isSignUp;
+            
+            if (isSignUp) {
+                authTitle.textContent = 'Sign Up';
+                authSubmitBtn.textContent = 'Sign Up';
+                authSwitchText.textContent = 'Already have an account?';
+                authSwitchBtn.textContent = 'Sign In';
+                nameField.classList.remove('hidden');
+            } else {
+                authTitle.textContent = 'Sign In';
+                authSubmitBtn.textContent = 'Sign In';
+                authSwitchText.textContent = "Don't have an account?";
+                authSwitchBtn.textContent = 'Sign Up';
+                nameField.classList.add('hidden');
+            }
+        }
+        
+        // Show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+        }
+        
+        // Hide error message
+        function hideError() {
+            errorMessage.classList.add('hidden');
+        }
+        
+        // Handle form submission
+        async function handleAuth(e) {
+            e.preventDefault();
+            hideError();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const displayName = document.getElementById('displayName').value;
+            
+            authSubmitBtn.disabled = true;
+            authSubmitBtn.textContent = isSignUp ? 'Creating Account...' : 'Signing In...';
+            
+            try {
+                let result;
+                
+                if (isSignUp) {
+                    if (!displayName.trim()) {
+                        showError('Please enter your full name');
+                        return;
+                    }
+                    result = await authService.signUp(email, password, displayName);
+                } else {
+                    result = await authService.signIn(email, password);
+                }
+                
+                if (result.success) {
+                    closeModal();
+                    // Redirect based on user type (you can customize this logic)
+                    window.location.href = email.includes('interviewer') ? 'interviewer.html' : 'user.html';
+                } else {
+                    showError(result.error);
+                }
+            } catch (error) {
+                showError('An unexpected error occurred. Please try again.');
+            } finally {
+                authSubmitBtn.disabled = false;
+                authSubmitBtn.textContent = isSignUp ? 'Sign Up' : 'Sign In';
+            }
+        }
+        
+        // Event listeners
+        closeAuthModal.addEventListener('click', closeModal);
+        authSwitchBtn.addEventListener('click', switchAuthMode);
+        authForm.addEventListener('submit', handleAuth);
+        
+        // Close modal when clicking outside
+        authModal.addEventListener('click', (e) => {
+            if (e.target === authModal) closeModal();
+        });
+        
+        // Check if user is already authenticated
+        if (authService.isAuthenticated()) {
+            const user = authService.getCurrentUser();
+            console.log('User already logged in:', user);
+        }
+    </script>
+    <!-- Signup Modal -->
+    <div id="signupModal" class="fixed inset-0 bg-gradient-to-br from-black/60 to-purple-900/40 backdrop-blur-sm hidden z-50 transition-all duration-300">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl transform transition-all duration-300 scale-95 hover:scale-100">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Join AI Interview Pro</h2>
+                    <p class="text-gray-600 mt-2">Start your free trial today</p>
+                </div>
+                <button onclick="closeSignupModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <div class="flex bg-gray-100 rounded-xl p-1 mb-6">
+                    <button type="button" onclick="setSignupUserType('user')" id="signupUserBtn" class="flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 bg-white text-primary shadow-sm">
+                        User
+                    </button>
+                    <button type="button" onclick="setSignupUserType('interviewer')" id="signupInterviewerBtn" class="flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600">
+                        Interviewer
+                    </button>
+                </div>
+                <form id="signupForm" class="space-y-4" onsubmit="handleSignup(event)">
+                    <div class="relative">
+                        <input id="signupName" type="text" placeholder="Full Name" required class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-200 outline-none">
+                    </div>
+                    <div class="relative">
+                        <input id="signupEmail" type="email" placeholder="Email Address" required class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-200 outline-none">
+                    </div>
+                    <div class="relative">
+                        <input id="signupPassword" type="password" placeholder="Password" required minlength="6" class="w-full px-4 py-4 pr-12 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-200 outline-none">
+                        <button type="button" onclick="togglePassword('signupPassword', 'signupPasswordToggle')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-xl">
+                            <span id="signupPasswordToggle">👁️</span>
+                        </button>
+                    </div>
+                    <div class="relative">
+                        <input id="signupConfirmPassword" type="password" placeholder="Confirm Password" required minlength="6" class="w-full px-4 py-4 pr-12 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-200 outline-none">
+                        <button type="button" onclick="togglePassword('signupConfirmPassword', 'signupConfirmPasswordToggle')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-xl">
+                            <span id="signupConfirmPasswordToggle">👁️</span>
+                        </button>
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary text-white py-4 rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200">
+                        Create Account
+                    </button>
+                    <p class="text-center text-sm text-gray-600 mt-4">
+                        Already have an account? <button type="button" onclick="closeSignupModal(); openLoginModal()" class="text-primary hover:underline font-semibold">Sign in</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-gradient-to-br from-black/60 to-blue-900/40 backdrop-blur-sm hidden z-50 transition-all duration-300">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl transform transition-all duration-300 scale-95 hover:scale-100">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold bg-gradient-to-r from-blue-500 to-primary bg-clip-text text-transparent">Welcome Back</h2>
+                    <p class="text-gray-600 mt-2">Sign in to your account</p>
+                </div>
+                <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <div class="flex bg-gray-100 rounded-xl p-1 mb-6">
+                    <button type="button" onclick="setLoginUserType('user')" id="loginUserBtn" class="flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 bg-white text-primary shadow-sm">
+                        User
+                    </button>
+                    <button type="button" onclick="setLoginUserType('interviewer')" id="loginInterviewerBtn" class="flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600">
+                        Interviewer
+                    </button>
+                </div>
+                <form id="loginForm" class="space-y-4" onsubmit="handleLogin(event)">
+                    <div class="relative">
+                        <input id="loginEmail" type="email" placeholder="Email Address" required class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all duration-200 outline-none">
+                    </div>
+                    <div class="relative">
+                        <input id="loginPassword" type="password" placeholder="Password" required class="w-full px-4 py-4 pr-12 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all duration-200 outline-none">
+                        <button type="button" onclick="togglePassword('loginPassword', 'loginPasswordToggle')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-xl">
+                            <span id="loginPasswordToggle">👁️</span>
+                        </button>
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-primary text-white py-4 rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200">
+                        Sign In
+                    </button>
+                    <p class="text-center text-sm text-gray-600 mt-4">
+                        Don't have an account? <button type="button" onclick="closeLoginModal(); openSignupModal()" class="text-primary hover:underline font-semibold">Sign up</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openSignupModal() {
+            document.getElementById('signupModal').classList.remove('hidden');
+        }
+        
+        function closeSignupModal() {
+            document.getElementById('signupModal').classList.add('hidden');
+        }
+        
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.remove('hidden');
+        }
+        
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+        }
+        
+        function openLoginPopup() {
+            openLoginModal();
+        }
+        
+        let signupUserType = 'user';
+        let loginUserType = 'user';
+        
+        function setSignupUserType(type) {
+            signupUserType = type;
+            const userBtn = document.getElementById('signupUserBtn');
+            const interviewerBtn = document.getElementById('signupInterviewerBtn');
+            
+            if (type === 'user') {
+                userBtn.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 bg-white text-primary shadow-sm';
+                interviewerBtn.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600';
+            } else {
+                userBtn.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600';
+                interviewerBtn.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 bg-white text-primary shadow-sm';
+            }
+        }
+        
+        function setLoginUserType(type) {
+            loginUserType = type;
+            const userBtn = document.getElementById('loginUserBtn');
+            const interviewerBtn = document.getElementById('loginInterviewerBtn');
+            
+            if (type === 'user') {
+                userBtn.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 bg-white text-primary shadow-sm';
+                interviewerBtn.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600';
+            } else {
+                userBtn.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600';
+                interviewerBtn.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 bg-white text-primary shadow-sm';
+            }
+        }
+        
+        async function handleSignup(event) {
+            event.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            try {
+                const { auth, createUserWithEmailAndPassword, updateProfile } = window.firebaseAuth;
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await updateProfile(userCredential.user, { 
+                    displayName: name,
+                    photoURL: signupUserType
+                });
+                
+                alert(`${signupUserType === 'user' ? 'User' : 'Interviewer'} account created successfully!`);
+                closeSignupModal();
+                document.getElementById('signupForm').reset();
+                
+                // Handle interviewer signup
+                if (signupUserType === 'interviewer') {
+                    // Add to Firebase and local storage
+                    const interviewerData = {
+                        name: name,
+                        email: email,
+                        signupDate: new Date().toLocaleDateString(),
+                        status: 'pending',
+                        uid: userCredential.user.uid
+                    };
+                    
+                    // Save to Firebase
+                    const { db, collection, addDoc } = window.firebaseDB;
+                    await addDoc(collection(db, 'pendingInterviewers'), interviewerData);
+                    
+                    // Save to local storage as backup
+                    pendingInterviewers.push(interviewerData);
+                    localStorage.setItem('pendingInterviewers', JSON.stringify(pendingInterviewers));
+                    showVerificationNotification();
+                } else {
+                    window.location.href = 'user.html';
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        function togglePassword(inputId, toggleId) {
+            const input = document.getElementById(inputId);
+            const toggle = document.getElementById(toggleId);
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggle.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                toggle.textContent = '👁️';
+            }
+        }
+        
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const { auth, signInWithEmailAndPassword } = window.firebaseAuth;
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                
+                // Get user type from profile or use selected login type
+                const userType = userCredential.user.photoURL || loginUserType;
+                
+                alert(`Login successful as ${userType === 'interviewer' ? 'Interviewer' : 'User'}!`);
+                closeLoginModal();
+                document.getElementById('loginForm').reset();
+                
+                // Check interviewer approval status
+                if (userType === 'interviewer') {
+                    const isApproved = await checkInterviewerApproval(email);
+                    if (isApproved) {
+                        window.location.href = 'interviewer.html';
+                    } else {
+                        alert('Your interviewer account is pending approval. Please contact admin.');
+                        return;
+                    }
+                } else {
+                    window.location.href = 'user.html';
+                }
+            } catch (error) {
+                if (error.code === 'auth/user-not-found') {
+                    alert('No account found with this email. Please sign up first.');
+                } else if (error.code === 'auth/wrong-password') {
+                    alert('Incorrect password. Please try again.');
+                } else if (error.code === 'auth/invalid-email') {
+                    alert('Invalid email address.');
+                } else {
+                    alert('Login failed. Please check your credentials or sign up first.');
+                }
+            }
+        }
+
+        // Interviewer verification system
+        const userVerificationStatus = {
+            isVerified: false,
+            userRole: 'interviewer',
+            verificationPending: true
+        };
+
+        // Store pending interviewers
+        let pendingInterviewers = JSON.parse(localStorage.getItem('pendingInterviewers')) || [];
+        let approvedInterviewers = JSON.parse(localStorage.getItem('approvedInterviewers')) || [];
+
+        function checkVerificationStatus() {
+            return userVerificationStatus.isVerified;
+        }
+
+        function restrictUnverifiedActions(actionType) {
+            if (!checkVerificationStatus() && userVerificationStatus.userRole === 'interviewer') {
+                alert('Access Denied: Your account is pending verification by the application owner. You cannot ' + actionType + ' until verified.');
+                return false;
+            }
+            return true;
+        }
+
+        function createInterview() {
+            if (!restrictUnverifiedActions('create interviews')) return;
+            console.log('Interview creation allowed');
+        }
+
+        function postContent() {
+            if (!restrictUnverifiedActions('post content')) return;
+            console.log('Content posting allowed');
+        }
+
+        function verifyInterviewer(userId) {
+            if (userVerificationStatus.userRole === 'owner' || userVerificationStatus.userRole === 'admin') {
+                userVerificationStatus.isVerified = true;
+                userVerificationStatus.verificationPending = false;
+                alert('Interviewer verified successfully');
+            } else {
+                alert('Only application owners can verify interviewers');
+            }
+        }
+
+        function openAdminPanel() {
+            if (userVerificationStatus.userRole !== 'owner') {
+                alert('Access denied. Only owners can access admin panel.');
+                return;
+            }
+            document.getElementById('adminPanel').classList.remove('hidden');
+            loadPendingInterviewers();
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminPanel').classList.add('hidden');
+        }
+
+        async function approveInterviewer(email, docId) {
+            try {
+                const { db, collection, addDoc, deleteDoc, doc } = window.firebaseDB;
+                
+                // Move to approved collection
+                const interviewerData = { email, status: 'approved', approvedDate: new Date().toLocaleDateString() };
+                await addDoc(collection(db, 'approvedInterviewers'), interviewerData);
+                
+                // Remove from pending
+                await deleteDoc(doc(db, 'pendingInterviewers', docId));
+                
+                alert(`Interviewer ${email} has been approved and can now login.`);
+                loadPendingInterviewers();
+            } catch (error) {
+                console.error('Error approving interviewer:', error);
+                alert('Error approving interviewer. Please try again.');
+            }
+        }
+
+        async function rejectInterviewer(email, docId) {
+            try {
+                const { db, deleteDoc, doc } = window.firebaseDB;
+                await deleteDoc(doc(db, 'pendingInterviewers', docId));
+                
+                alert(`Interviewer ${email} has been rejected.`);
+                loadPendingInterviewers();
+            } catch (error) {
+                console.error('Error rejecting interviewer:', error);
+                alert('Error rejecting interviewer. Please try again.');
+            }
+        }
+
+        async function loadPendingInterviewers() {
+            const pendingList = document.getElementById('pendingInterviewers');
+            
+            try {
+                // Load from Firebase
+                const { db, collection, getDocs } = window.firebaseDB;
+                const querySnapshot = await getDocs(collection(db, 'pendingInterviewers'));
+                
+                if (querySnapshot.empty) {
+                    pendingList.innerHTML = '<p class="text-gray-500 text-center py-4">No pending interviewer applications</p>';
+                    return;
+                }
+                
+                let html = '';
+                querySnapshot.forEach((doc) => {
+                    const interviewer = doc.data();
+                    html += `
+                        <div class="bg-gray-50 p-4 rounded-lg mb-3">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="font-semibold">${interviewer.name}</p>
+                                    <p class="text-sm text-gray-600">${interviewer.email}</p>
+                                    <p class="text-xs text-gray-500">Applied on ${interviewer.signupDate}</p>
+                                </div>
+                                <div class="space-x-2">
+                                    <button onclick="approveInterviewer('${interviewer.email}', '${doc.id}')" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600">Approve</button>
+                                    <button onclick="rejectInterviewer('${interviewer.email}', '${doc.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Reject</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                pendingList.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading pending interviewers:', error);
+                pendingList.innerHTML = '<p class="text-red-500 text-center py-4">Error loading applications</p>';
+            }
+        }
+
+        function loginAsOwner() {
+            userVerificationStatus.userRole = 'owner';
+            alert('Logged in as owner. You can now access the admin panel.');
+        }
+
+        function openAdminLogin() {
+            document.getElementById('adminLoginPopup').classList.remove('hidden');
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('adminLoginPopup').classList.add('hidden');
+        }
+
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            if (username === 'chayanadmin' && password === 'varun123') {
+                userVerificationStatus.userRole = 'owner';
+                closeAdminLogin();
+                openAdminPanel();
+                alert('Admin login successful!');
+            } else {
+                alert('Invalid admin credentials!');
+            }
+        }
+
+        function showVerificationNotification() {
+            document.getElementById('verificationNotification').classList.remove('hidden');
+        }
+
+        function closeVerificationNotification() {
+            document.getElementById('verificationNotification').classList.add('hidden');
+        }
+
+        async function checkInterviewerApproval(email) {
+            try {
+                const { db, collection, getDocs } = window.firebaseDB;
+                const querySnapshot = await getDocs(collection(db, 'approvedInterviewers'));
+                
+                let isApproved = false;
+                querySnapshot.forEach((doc) => {
+                    if (doc.data().email === email) {
+                        isApproved = true;
+                    }
+                });
+                
+                return isApproved;
+            } catch (error) {
+                console.error('Error checking approval status:', error);
+                return false;
+            }
+        }
+
+        // Dark mode functionality using global manager
+        function toggleDarkMode() {
+            window.darkModeManager.toggle();
+            updateDarkModeIcon();
+        }
+        
+        function updateDarkModeIcon() {
+            const icon = document.getElementById('darkModeIcon');
+            const isDark = document.documentElement.classList.contains('dark');
+            icon.textContent = isDark ? '☀️' : '🌙';
+        }
+
+        // Initialize dark mode on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDarkModeIcon();
+        });
+    </script>
+
+    <!-- Verification Notification -->
+    <div id="verificationNotification" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 text-center">
+            <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Account Created Successfully!</h2>
+            <p class="text-gray-600 mb-6">Your interviewer account has been created and is pending verification by the admin. You will be able to login once your account is approved.</p>
+            <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                <p class="text-sm text-blue-800"><strong>Next Steps:</strong></p>
+                <p class="text-sm text-blue-700">• Wait for admin approval</p>
+                <p class="text-sm text-blue-700">• You'll receive confirmation once approved</p>
+                <p class="text-sm text-blue-700">• Then you can login as an interviewer</p>
+            </div>
+            <button onclick="closeVerificationNotification()" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
+                Got it!
+            </button>
+        </div>
+    </div>
+
+    <!-- Admin Login Popup -->
+    <div id="adminLoginPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Admin Login</h2>
+                <button onclick="closeAdminLogin()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form onsubmit="handleAdminLogin(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+                    <input type="text" id="adminUsername" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" placeholder="Enter admin username" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <input type="password" id="adminPassword" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" placeholder="Enter admin password" required>
+                </div>
+                <button type="submit" class="w-full bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700 transition">
+                    Login as Admin
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-xl p-8 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Admin Panel - Interviewer Verification</h2>
+                <button onclick="closeAdminPanel()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-4">Pending Interviewer Applications</h3>
+                <div id="pendingInterviewers">
+                    <!-- Pending interviewers will be loaded here -->
+                </div>
+            </div>
+            <div class="flex justify-end space-x-3">
+                <button onclick="loadPendingInterviewers()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Refresh</button>
+                <button onclick="closeAdminPanel()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo Admin Access Button -->
+    <div class="fixed bottom-4 right-4 space-y-2 hidden">
+        <button onclick="loginAsOwner()" class="block bg-red-500 text-white px-4 py-2 rounded text-sm hover:bg-red-600">Demo: Login as Owner</button>
+        <button onclick="openAdminPanel()" class="block bg-purple-500 text-white px-4 py-2 rounded text-sm hover:bg-purple-600">Admin Panel</button>
+    </div>
+
+</body>
+</html>

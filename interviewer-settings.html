@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - AI Interview Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#00d4ff',
+                        secondary: '#7c3aed',
+                        accent: '#10b981',
+                        tech: '#1e293b',
+                        cyber: '#0ea5e9'
+                    },
+                    fontFamily: {
+                        'mono': ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace']
+                    },
+                    animation: {
+                        'glow': 'glow 2s ease-in-out infinite alternate'
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px #00d4ff' },
+                            '100%': { boxShadow: '0 0 20px #00d4ff, 0 0 30px #00d4ff' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+        .tech-grid { background-image: radial-gradient(circle at 1px 1px, rgba(0,212,255,0.15) 1px, transparent 0); background-size: 20px 20px; }
+        .matrix-text { font-family: 'JetBrains Mono', monospace; }
+    </style>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDUcG95XK9gg3PBKqYZVBYk5rarf-vExck",
+            authDomain: "chayan2-platform.firebaseapp.com",
+            projectId: "chayan2-platform",
+            storageBucket: "chayan2-platform.firebasestorage.app",
+            messagingSenderId: "694117760821",
+            appId: "1:694117760821:web:68d2b2dee6fd158984567c",
+            measurementId: "G-PB84HY01ED"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        window.firebaseAuth = { auth, updateProfile };
+        window.firebaseDB = { db, doc, setDoc, getDoc };
+    </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 tech-grid transition-colors duration-200 matrix-text">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <div class="bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm shadow-lg border-b border-primary/20 dark:border-primary/30">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center space-x-4">
+                        <a href="interviewer.html" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </a>
+                        <h1 class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Settings</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-primary/20 dark:border-primary/30">
+                <!-- Profile Header -->
+                <div class="p-6 border-b border-primary/20 dark:border-primary/30 bg-gradient-to-r from-primary/5 to-secondary/5">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-20 h-20 bg-gradient-to-r from-primary to-secondary rounded-2xl flex items-center justify-center animate-glow">
+                            <span class="text-white text-2xl font-bold" id="profileInitials">--</span>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white" id="profileName">Loading...</h2>
+                            <p class="text-gray-600 dark:text-gray-400" id="profileEmail">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Form -->
+                <form id="settingsForm" class="p-6 space-y-8">
+                    <!-- Personal Information -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Personal Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name</label>
+                                <input type="text" id="fullName" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary dark:bg-gray-700 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Job Title</label>
+                                <input type="text" id="jobTitle" placeholder="e.g., Senior Software Engineer" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary dark:bg-gray-700 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Company</label>
+                                <input type="text" id="company" placeholder="e.g., Tech Corp Inc." class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary dark:bg-gray-700 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Years of Experience</label>
+                                <select id="experience" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary dark:bg-gray-700 dark:text-white">
+                                    <option value="">Select experience</option>
+                                    <option value="1-2">1-2 years</option>
+                                    <option value="3-5">3-5 years</option>
+                                    <option value="6-10">6-10 years</option>
+                                    <option value="10+">10+ years</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expertise -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Areas of Expertise</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <label class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                                <input type="checkbox" name="expertise" value="javascript" class="rounded border-gray-300 text-primary focus:ring-primary/50">
+                                <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">JavaScript</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                                <input type="checkbox" name="expertise" value="python" class="rounded border-gray-300 text-primary focus:ring-primary/50">
+                                <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Python</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                                <input type="checkbox" name="expertise" value="react" class="rounded border-gray-300 text-primary focus:ring-primary/50">
+                                <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">React</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                                <input type="checkbox" name="expertise" value="nodejs" class="rounded border-gray-300 text-primary focus:ring-primary/50">
+                                <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Node.js</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                                <input type="checkbox" name="expertise" value="systemdesign" class="rounded border-gray-300 text-primary focus:ring-primary/50">
+                                <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">System Design</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                                <input type="checkbox" name="expertise" value="algorithms" class="rounded border-gray-300 text-primary focus:ring-primary/50">
+                                <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Algorithms</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Bio -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Professional Bio</h3>
+                        <textarea id="bio" rows="4" placeholder="Tell candidates about your background and interview style..." class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary dark:bg-gray-700 dark:text-white resize-none"></textarea>
+                    </div>
+
+                    <!-- Save Button -->
+                    <div class="flex justify-end pt-6">
+                        <button type="submit" class="px-8 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 animate-glow">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load user profile and settings
+        async function loadProfile() {
+            try {
+                const { auth } = window.firebaseAuth;
+                const { db, doc, getDoc } = window.firebaseDB;
+                const user = auth.currentUser;
+                
+                if (user) {
+                    const userName = user.displayName || user.email.split('@')[0];
+                    const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+                    
+                    document.getElementById('profileName').textContent = userName;
+                    document.getElementById('profileEmail').textContent = user.email;
+                    document.getElementById('profileInitials').textContent = initials;
+                    document.getElementById('fullName').value = userName;
+                    
+                    // Load additional profile data from Firestore
+                    const profileDoc = await getDoc(doc(db, 'interviewerProfiles', user.uid));
+                    if (profileDoc.exists()) {
+                        const data = profileDoc.data();
+                        document.getElementById('jobTitle').value = data.jobTitle || '';
+                        document.getElementById('company').value = data.company || '';
+                        document.getElementById('experience').value = data.experience || '';
+                        document.getElementById('bio').value = data.bio || '';
+                        
+                        // Set expertise checkboxes
+                        if (data.expertise) {
+                            data.expertise.forEach(skill => {
+                                const checkbox = document.querySelector(`input[value="${skill}"]`);
+                                if (checkbox) checkbox.checked = true;
+                            });
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        // Save profile settings
+        document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const { auth, updateProfile } = window.firebaseAuth;
+                const { db, doc, setDoc } = window.firebaseDB;
+                const user = auth.currentUser;
+                
+                if (!user) return;
+                
+                const fullName = document.getElementById('fullName').value;
+                const jobTitle = document.getElementById('jobTitle').value;
+                const company = document.getElementById('company').value;
+                const experience = document.getElementById('experience').value;
+                const bio = document.getElementById('bio').value;
+                
+                // Get selected expertise
+                const expertise = Array.from(document.querySelectorAll('input[name="expertise"]:checked'))
+                    .map(cb => cb.value);
+                
+                // Update Firebase Auth profile
+                await updateProfile(user, {
+                    displayName: fullName
+                });
+                
+                // Save to Firestore
+                await setDoc(doc(db, 'interviewerProfiles', user.uid), {
+                    fullName,
+                    jobTitle,
+                    company,
+                    experience,
+                    expertise,
+                    bio,
+                    updatedAt: new Date().toISOString()
+                });
+                
+                // Update UI
+                document.getElementById('profileName').textContent = fullName;
+                const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('profileInitials').textContent = initials;
+                
+                // Show success message
+                const submitBtn = e.target.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = '✓ Saved!';
+                submitBtn.disabled = true;
+                
+                setTimeout(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                alert('Error saving profile. Please try again.');
+            }
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', loadProfile);
+    </script>
+</body>
+</html>

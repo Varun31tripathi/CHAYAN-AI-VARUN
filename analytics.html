@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - ChayanAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#00d4ff',
+                        secondary: '#7c3aed',
+                        accent: '#10b981',
+                        tech: '#1e293b',
+                        cyber: '#0ea5e9'
+                    },
+                    fontFamily: {
+                        'mono': ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace']
+                    },
+                    animation: {
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px #00d4ff' },
+                            '100%': { boxShadow: '0 0 20px #00d4ff, 0 0 30px #00d4ff' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+        .tech-grid { background-image: radial-gradient(circle at 1px 1px, rgba(0,212,255,0.15) 1px, transparent 0); background-size: 20px 20px; }
+        .matrix-text { font-family: 'JetBrains Mono', monospace; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 tech-grid matrix-text">
+    <!-- Header -->
+    <div class="bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm shadow-lg border-b border-primary/20 dark:border-primary/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <a href="user.html" class="text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-primary transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </a>
+                    <div class="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center animate-glow">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Performance Analytics</h1>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="px-3 py-1 bg-gradient-to-r from-accent/20 to-primary/20 text-accent border border-accent/30 rounded-full text-sm font-mono">PRO</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-2 h-8 bg-gradient-to-b from-primary to-secondary rounded-full animate-pulse"></div>
+                <h1 class="text-3xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">Analytics Dashboard</h1>
+                <div class="flex space-x-1">
+                    <div class="w-2 h-2 bg-primary rounded-full animate-ping"></div>
+                    <div class="w-2 h-2 bg-secondary rounded-full animate-ping" style="animation-delay: 0.2s"></div>
+                    <div class="w-2 h-2 bg-accent rounded-full animate-ping" style="animation-delay: 0.4s"></div>
+                </div>
+            </div>
+            <p class="text-slate-600 dark:text-slate-300 font-mono text-sm">// Analyze your interview performance and track progress</p>
+        </div>
+
+        <!-- Performance Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-primary/20 hover:shadow-primary/10 transition-all duration-300">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-gradient-to-br from-primary/20 to-cyber/20 rounded-xl">
+                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-sm font-mono text-slate-600 dark:text-slate-400">overall_score</p>
+                    <p class="text-3xl font-bold bg-gradient-to-r from-primary to-cyber bg-clip-text text-transparent font-mono" id="overallScore">87</p>
+                    <p class="text-xs text-accent font-mono">+12% from last month</p>
+                </div>
+            </div>
+
+            <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-secondary/20 hover:shadow-secondary/10 transition-all duration-300">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-gradient-to-br from-secondary/20 to-primary/20 rounded-xl">
+                        <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-sm font-mono text-slate-600 dark:text-slate-400">avg_time</p>
+                    <p class="text-3xl font-bold bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent font-mono" id="avgTime">42m</p>
+                    <p class="text-xs text-accent font-mono">-5m improvement</p>
+                </div>
+            </div>
+
+            <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-accent/20 hover:shadow-accent/10 transition-all duration-300">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-gradient-to-br from-accent/20 to-primary/20 rounded-xl">
+                        <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-sm font-mono text-slate-600 dark:text-slate-400">success_rate</p>
+                    <p class="text-3xl font-bold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent font-mono" id="successRate">78%</p>
+                    <p class="text-xs text-accent font-mono">+8% this week</p>
+                </div>
+            </div>
+
+            <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-cyber/20 hover:shadow-cyber/10 transition-all duration-300">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-gradient-to-br from-cyber/20 to-secondary/20 rounded-xl">
+                        <svg class="w-6 h-6 text-cyber" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-sm font-mono text-slate-600 dark:text-slate-400">interviews</p>
+                    <p class="text-3xl font-bold bg-gradient-to-r from-cyber to-secondary bg-clip-text text-transparent font-mono" id="totalInterviews">24</p>
+                    <p class="text-xs text-accent font-mono">+6 this month</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Performance Trend -->
+            <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-2xl shadow-lg border border-primary/20 p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent font-mono">performance_trend()</h3>
+                    <select class="bg-slate-100 dark:bg-slate-700 border border-primary/20 rounded-lg px-3 py-1 text-sm font-mono">
+                        <option>Last 30 days</option>
+                        <option>Last 90 days</option>
+                        <option>Last year</option>
+                    </select>
+                </div>
+                <div class="h-64 flex items-end justify-between space-x-2" id="performanceChart">
+                    <!-- Simulated Chart Bars -->
+                    <div class="flex flex-col items-center space-y-2">
+                        <div class="w-8 bg-gradient-to-t from-primary to-cyber rounded-t-lg" style="height: 60px;"></div>
+                        <span class="text-xs font-mono text-slate-500">W1</span>
+                    </div>
+                    <div class="flex flex-col items-center space-y-2">
+                        <div class="w-8 bg-gradient-to-t from-primary to-cyber rounded-t-lg" style="height: 80px;"></div>
+                        <span class="text-xs font-mono text-slate-500">W2</span>
+                    </div>
+                    <div class="flex flex-col items-center space-y-2">
+                        <div class="w-8 bg-gradient-to-t from-primary to-cyber rounded-t-lg" style="height: 120px;"></div>
+                        <span class="text-xs font-mono text-slate-500">W3</span>
+                    </div>
+                    <div class="flex flex-col items-center space-y-2">
+                        <div class="w-8 bg-gradient-to-t from-primary to-cyber rounded-t-lg animate-glow" style="height: 140px;"></div>
+                        <span class="text-xs font-mono text-slate-500">W4</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills Breakdown -->
+            <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-2xl shadow-lg border border-secondary/20 p-6">
+                <h3 class="text-lg font-semibold bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent font-mono mb-6">skills_analysis()</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-mono text-slate-600 dark:text-slate-300">JavaScript</span>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-32 bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-primary to-cyber h-2 rounded-full" style="width: 85%"></div>
+                            </div>
+                            <span class="text-sm font-mono text-primary">85%</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-mono text-slate-600 dark:text-slate-300">React</span>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-32 bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-secondary to-primary h-2 rounded-full" style="width: 78%"></div>
+                            </div>
+                            <span class="text-sm font-mono text-secondary">78%</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-mono text-slate-600 dark:text-slate-300">System Design</span>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-32 bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-accent to-primary h-2 rounded-full" style="width: 72%"></div>
+                            </div>
+                            <span class="text-sm font-mono text-accent">72%</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-mono text-slate-600 dark:text-slate-300">Algorithms</span>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-32 bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-cyber to-secondary h-2 rounded-full" style="width: 68%"></div>
+                            </div>
+                            <span class="text-sm font-mono text-cyber">68%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-2xl shadow-lg border border-accent/20 p-6">
+            <h3 class="text-lg font-semibold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent font-mono mb-6">recent_activity.log</h3>
+            <div class="space-y-4" id="activityLog">
+                <div class="flex items-center space-x-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
+                    <div class="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
+                    <div class="flex-1">
+                        <p class="font-mono text-sm text-slate-900 dark:text-white">Completed Technical Interview - Frontend Developer</p>
+                        <p class="font-mono text-xs text-slate-500">Score: 89/100 • 2 hours ago</p>
+                    </div>
+                    <span class="px-2 py-1 bg-accent/20 text-accent rounded-full text-xs font-mono">+89</span>
+                </div>
+                <div class="flex items-center space-x-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
+                    <div class="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                    <div class="flex-1">
+                        <p class="font-mono text-sm text-slate-900 dark:text-white">Practice Session - System Design</p>
+                        <p class="font-mono text-xs text-slate-500">Score: 76/100 • 1 day ago</p>
+                    </div>
+                    <span class="px-2 py-1 bg-primary/20 text-primary rounded-full text-xs font-mono">+76</span>
+                </div>
+                <div class="flex items-center space-x-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
+                    <div class="w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
+                    <div class="flex-1">
+                        <p class="font-mono text-sm text-slate-900 dark:text-white">Behavioral Interview - Team Leadership</p>
+                        <p class="font-mono text-xs text-slate-500">Score: 82/100 • 3 days ago</p>
+                    </div>
+                    <span class="px-2 py-1 bg-secondary/20 text-secondary rounded-full text-xs font-mono">+82</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate real-time data updates
+        function updateAnalytics() {
+            const scores = [85, 87, 89, 86, 88];
+            const times = ['38m', '42m', '45m', '40m', '39m'];
+            const rates = [75, 78, 80, 76, 79];
+            
+            const randomIndex = Math.floor(Math.random() * scores.length);
+            
+            document.getElementById('overallScore').textContent = scores[randomIndex];
+            document.getElementById('avgTime').textContent = times[randomIndex];
+            document.getElementById('successRate').textContent = rates[randomIndex] + '%';
+        }
+
+        // Update analytics every 10 seconds
+        setInterval(updateAnalytics, 10000);
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Analytics dashboard loaded');
+        });
+    </script>
+</body>
+</html>
