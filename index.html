@@ -696,6 +696,14 @@
                 const { auth, signInWithEmailAndPassword } = window.firebaseAuth;
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 
+                // Store user in localStorage so other pages can check auth
+                const user = userCredential.user;
+                localStorage.setItem('user', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName || user.email.split('@')[0]
+                }));
+                
                 // Use the login type selected by the user
                 const userType = loginUserType;
                 
