@@ -774,12 +774,16 @@
         headlineForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(headlineForm);
+            const currentUserName = document.getElementById('userName').textContent;
+            
+            console.log('Posting headline as:', currentUserName);
             
             const headlineData = {
                 title: formData.get('title'),
                 content: formData.get('message'),
                 priority: formData.get('priority'),
                 visibility: formData.get('visibility'),
+                createdBy: currentUserName,
                 createdAt: window.firebaseDB.serverTimestamp()
             };
             
@@ -1540,57 +1544,76 @@
         // Load user profile from Firebase Auth
         async function loadUserProfile() {
             try {
-                const { getAuth } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js');
+                const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js');
                 const auth = getAuth();
-                const user = auth.currentUser;
                 
-                if (user) {
-                    const userName = user.displayName || user.email.split('@')[0] || 'Interviewer';
-                    const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
-                    
-                    document.getElementById('userName').textContent = userName;
-                    document.getElementById('userInitials').textContent = initials;
-                    
-                    // Store user data for other functions
-                    localStorage.setItem('userData', JSON.stringify({
-                        displayName: userName,
-                        email: user.email,
-                        uid: user.uid
-                    }));
-                } else {
-                    // Fallback if no auth user
-                    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-                    const userName = userData.displayName || userData.name || 'Interviewer';
-                    const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
-                    
-                    document.getElementById('userName').textContent = userName;
-                    document.getElementById('userInitials').textContent = initials;
-                }
+                return new Promise((resolve) => {
+                    onAuthStateChanged(auth, (user) => {
+                        if (user) {
+                            const userName = user.displayName || user.email.split('@')[0] || 'Interviewer';
+                            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+                            
+                            document.getElementById('userName').textContent = userName;
+                            document.getElementById('userInitials').textContent = initials;
+                            
+                            localStorage.setItem('userData', JSON.stringify({
+                                displayName: userName,
+                                email: user.email,
+                                uid: user.uid
+                            }));
+                        } else {
+                            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                            const userName = userData.displayName || userData.name || 'Interviewer';
+                            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+                            
+                            document.getElementById('userName').textContent = userName;
+                            document.getElementById('userInitials').textContent = initials;
+                        }
+                        resolve();
+                    });
+                });
             } catch (error) {
                 console.error('Error loading user profile:', error);
-                // Fallback
                 document.getElementById('userName').textContent = 'Interviewer';
                 document.getElementById('userInitials').textContent = 'IN';
             }
         }
 
-        // Load headlines from Firebase
+        // Load headlines from Firebase (only current user's headlines)
         async function loadHeadlines() {
             try {
-                const { db, collection, getDocs, query, orderBy } = window.firebaseDB;
+                const { db, collection, getDocs, query, where, orderBy } = window.firebaseDB;
+                const currentUserName = document.getElementById('userName').textContent;
                 
-                const headlinesQuery = query(
-                    collection(db, 'headlines'),
-                    orderBy('createdAt', 'desc')
-                );
+                console.log('Loading headlines for user:', currentUserName);
                 
-                const snapshot = await getDocs(headlinesQuery);
+                let snapshot;
+                try {
+                    // Try with composite index (createdBy + createdAt)
+                    const headlinesQuery = query(
+                        collection(db, 'headlines'),
+                        where('createdBy', '==', currentUserName),
+                        orderBy('createdAt', 'desc')
+                    );
+                    snapshot = await getDocs(headlinesQuery);
+                } catch (indexError) {
+                    console.warn('Composite index not ready, falling back to simple query:', indexError.message);
+                    // Fallback: query without orderBy (no composite index needed)
+                    const simpleQuery = query(
+                        collection(db, 'headlines'),
+                        where('createdBy', '==', currentUserName)
+                    );
+                    snapshot = await getDocs(simpleQuery);
+                }
+                
                 const headlinesList = document.getElementById('headlinesList');
+                
+                console.log('Headlines found:', snapshot.size);
                 
                 if (snapshot.empty) {
                     headlinesList.innerHTML = `
                         <div class="text-center py-8 text-gray-500 dark:text-gray-400">
-                            <p>No headlines found</p>
+                            <p>No headlines found. Post your first headline!</p>
                         </div>
                     `;
                     return;
@@ -1621,11 +1644,19 @@
                                         <span>Visibility: ${data.visibility || 'All Candidates'}</span>
                                     </div>
                                 </div>
-                                <button class="ml-4 p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200" onclick="deleteHeadline(this, '${doc.id}')">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                    </svg>
-                                </button>
+                                <div class="flex space-x-2 ml-4">
+                                    <button class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200" onclick="viewHeadline(this)" title="View">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200" onclick="deleteHeadline(this, '${doc.id}')" title="Delete">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -1642,6 +1673,16 @@
                 `;
             }
         }
+
+        // View headline details
+        function viewHeadline(button) {
+            const card = button.closest('.bg-gray-50');
+            const title = card.querySelector('h3').textContent;
+            const content = card.querySelector('p.text-gray-600').textContent;
+            alert(`📢 ${title}\n\n${content}`);
+        }
+
+        window.viewHeadline = viewHeadline;
 
         // Load interviews from Firebase (user-specific)
         async function loadInterviews() {
@@ -1769,7 +1810,11 @@
         // Initialize dashboard on page load
         document.addEventListener('DOMContentLoaded', async () => {
             await loadUserProfile();
-            loadDashboardData();
+            // Only load data after user name is set
+            const userName = document.getElementById('userName').textContent;
+            if (userName && userName !== 'Loading...') {
+                loadDashboardData();
+            }
         });
     </script>
     

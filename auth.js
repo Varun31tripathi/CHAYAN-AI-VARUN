@@ -1,4 +1,5 @@
 import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from './firebase-config.js';
+import { updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
 // Authentication functions
 export const authService = {
@@ -7,6 +8,9 @@ export const authService = {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
+            
+            // Set display name on Firebase profile
+            await updateProfile(user, { displayName: displayName });
             
             // Store user info in localStorage
             localStorage.setItem('user', JSON.stringify({
@@ -27,11 +31,15 @@ export const authService = {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             
+            // Wait for profile to be loaded
+            await user.reload();
+            const displayName = user.displayName || user.email.split('@')[0];
+            
             // Store user info in localStorage
             localStorage.setItem('user', JSON.stringify({
                 uid: user.uid,
                 email: user.email,
-                displayName: user.displayName || user.email
+                displayName: displayName
             }));
             
             return { success: true, user };

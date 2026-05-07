@@ -1398,6 +1398,14 @@
                 userNameElement.textContent = user.displayName;
             }
             
+            // Also listen for auth state to get latest displayName
+            authService.onAuthStateChange((userData) => {
+                if (userData && userData.displayName) {
+                    const el = document.getElementById('userDisplayName');
+                    if (el) el.textContent = userData.displayName;
+                }
+            });
+            
             // Load membership status
             loadMembershipStatus(user);
         });

@@ -87,7 +87,6 @@
                         <button onclick="toggleDarkMode()" class="text-gray-600 dark:text-gray-300 hover:text-primary px-3 py-2 text-sm font-medium transition-colors" title="Toggle dark mode">
                             <span id="darkModeIcon">🌙</span>
                         </button>
-                        <button onclick="openLoginPopup()" class="text-gray-600 dark:text-gray-300 hover:text-primary px-3 py-2 text-sm font-medium transition-colors">Login</button>
                         <button onclick="openSignupModal()" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Get Started</button>
                     </div>
                 </div>
@@ -294,48 +293,7 @@
         </div>
     </footer>
     <!-- Login Popup -->
-    <div id="loginPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Login</h2>
-                <button onclick="closeLoginPopup()" class="text-gray-400 hover:text-gray-600">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            <form onsubmit="handleLogin(event)">
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                    <input type="email" id="loginEmail" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" placeholder="Enter your email">
-                </div>
-                <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                    <input type="password" id="loginPassword" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" placeholder="Enter your password">
-                </div>
-                <button type="submit" class="w-full bg-primary text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition">
-                    Login
-                </button>
-            </form>
-        </div>
-    </div>
 
-    <script>
-        function openLoginPopup() {
-            document.getElementById('loginPopup').classList.remove('hidden');
-        }
-        
-        function closeLoginPopup() {
-            document.getElementById('loginPopup').classList.add('hidden');
-        }
-        
-        // Close popup when clicking outside
-        document.getElementById('loginPopup').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeLoginPopup();
-            }
-        });
-    </script>
     <!-- Login/Signup Modal -->
     <div id="authModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-gray-200">
@@ -559,7 +517,12 @@
     <!-- Login Modal -->
     <div id="loginModal" class="fixed inset-0 bg-gradient-to-br from-black/60 to-blue-900/40 backdrop-blur-sm hidden z-50 transition-all duration-300">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl transform transition-all duration-300 scale-95 hover:scale-100">
+            <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl transform transition-all duration-300 scale-95 hover:scale-100 relative">
+                <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
                 <div class="text-center mb-8">
                     <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-primary rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -569,19 +532,16 @@
                     <h2 class="text-3xl font-bold bg-gradient-to-r from-blue-500 to-primary bg-clip-text text-transparent">Welcome Back</h2>
                     <p class="text-gray-600 mt-2">Sign in to your account</p>
                 </div>
-                <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-                <div class="flex bg-gray-100 rounded-xl p-1 mb-6">
-                    <button type="button" onclick="setLoginUserType('user')" id="loginUserBtn" class="flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 bg-white text-primary shadow-sm">
-                        User
+                <div class="flex bg-gray-100 rounded-xl p-1 mb-2 relative overflow-hidden">
+                    <div id="loginSlider" class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-md transition-all duration-300 ease-in-out"></div>
+                    <button type="button" onclick="setLoginUserType('user')" id="loginUserBtn" class="relative z-10 flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 text-primary">
+                        👤 Candidate
                     </button>
-                    <button type="button" onclick="setLoginUserType('interviewer')" id="loginInterviewerBtn" class="flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600">
-                        Interviewer
+                    <button type="button" onclick="setLoginUserType('interviewer')" id="loginInterviewerBtn" class="relative z-10 flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-500">
+                        🎯 Interviewer
                     </button>
                 </div>
+                <p id="loginRoleHint" class="text-xs text-center text-gray-500 mb-5">Logging in as a candidate</p>
                 <form id="loginForm" class="space-y-4" onsubmit="handleLogin(event)">
                     <div class="relative">
                         <input id="loginEmail" type="email" placeholder="Email Address" required class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all duration-200 outline-none">
@@ -645,13 +605,21 @@
             loginUserType = type;
             const userBtn = document.getElementById('loginUserBtn');
             const interviewerBtn = document.getElementById('loginInterviewerBtn');
+            const slider = document.getElementById('loginSlider');
+            const hint = document.getElementById('loginRoleHint');
             
             if (type === 'user') {
-                userBtn.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 bg-white text-primary shadow-sm';
-                interviewerBtn.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600';
+                slider.style.left = '4px';
+                userBtn.className = 'relative z-10 flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 text-primary';
+                interviewerBtn.className = 'relative z-10 flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-500';
+                hint.textContent = 'Logging in as a candidate';
+                hint.style.color = '#3b82f6';
             } else {
-                userBtn.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600';
-                interviewerBtn.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 bg-white text-primary shadow-sm';
+                slider.style.left = 'calc(50% + 0px)';
+                userBtn.className = 'relative z-10 flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-500';
+                interviewerBtn.className = 'relative z-10 flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 text-primary';
+                hint.textContent = 'Logging in as an interviewer';
+                hint.style.color = '#7c3aed';
             }
         }
         
@@ -728,8 +696,8 @@
                 const { auth, signInWithEmailAndPassword } = window.firebaseAuth;
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 
-                // Get user type from profile or use selected login type
-                const userType = userCredential.user.photoURL || loginUserType;
+                // Use the login type selected by the user
+                const userType = loginUserType;
                 
                 alert(`Login successful as ${userType === 'interviewer' ? 'Interviewer' : 'User'}!`);
                 closeLoginModal();
@@ -931,14 +899,17 @@
                 
                 let isApproved = false;
                 querySnapshot.forEach((doc) => {
-                    if (doc.data().email === email) {
+                    const docEmail = doc.data().email;
+                    if (docEmail && docEmail.toLowerCase().trim() === email.toLowerCase().trim()) {
                         isApproved = true;
                     }
                 });
                 
+                console.log('Approval check for:', email, '| Result:', isApproved);
                 return isApproved;
             } catch (error) {
                 console.error('Error checking approval status:', error);
+                alert('Error checking approval: ' + error.message);
                 return false;
             }
         }
